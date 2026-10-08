@@ -34,7 +34,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 .round[aria-pressed="false"]{background:rgba(60,20,60,.7);box-shadow:none;border:1px solid var(--line)}
 
 /* dock */
-.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);z-index:5;display:flex;gap:6px;padding:6px;border-radius:20px;background:rgba(25,8,32,.62);border:1px solid rgba(255,140,210,.25);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity 1s,transform 1s;max-width:calc(100vw - 24px)}
+.dock{position:fixed;left:50%;bottom:calc(14px + env(safe-area-inset-bottom,0px));transform:translate(-50%,30px);z-index:5;display:flex;gap:6px;padding:6px;border-radius:20px;background:rgba(25,8,32,.62);border:1px solid rgba(255,140,210,.25);backdrop-filter:blur(10px);opacity:0;pointer-events:none;transition:opacity 1s,transform 1s;max-width:calc(100vw - 24px);overflow-x:auto;scrollbar-width:none}
 .dock.show{opacity:1;transform:translate(-50%,0);pointer-events:auto}
 .dock button{border:0;background:transparent;border-radius:14px;padding:6px 10px;display:flex;flex-direction:column;align-items:center;gap:1px;font-size:.7rem;color:var(--dim);min-width:56px;transition:background .2s,color .2s}
 .dock button span{font-size:1.25rem;line-height:1.2}
@@ -160,15 +160,44 @@ button{font:inherit;color:inherit;cursor:pointer}
 .toast{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.6);z-index:15;font-family:var(--f-display);font-size:clamp(1.8rem,8vw,3rem);color:#fff;text-shadow:0 0 20px var(--pink),0 0 40px var(--pink);pointer-events:none;opacity:0;transition:opacity .4s,transform .6s cubic-bezier(.2,.9,.25,1.3)}
 .toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .nogl{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--dim)}
+
+/* fx overlay + new games */
+#fx{position:fixed;inset:0;width:100%;height:100%;z-index:25;pointer-events:none}
+.bl{display:flex;gap:8px;align-items:center}
+.hcount{font-family:var(--f-latin);font-size:.8rem;font-weight:600;color:#ffe08a;background:rgba(20,6,26,.55);border:1px solid rgba(255,210,122,.45);border-radius:999px;padding:5px 12px;backdrop-filter:blur(6px);font-variant-numeric:tabular-nums;transition:transform .3s}
+.hcount.bump{transform:scale(1.25)}
+.toast.sm{font-family:var(--f-body);font-size:1.02rem;line-height:1.5;background:rgba(40,12,48,.85);padding:10px 18px;border-radius:16px;border:1px solid var(--line);width:max-content;max-width:86vw;text-align:center;text-shadow:none}
+.wish-in{width:100%;max-width:380px;min-height:90px;resize:none;border-radius:14px;border:1px solid var(--line);background:rgba(255,255,255,.07);color:var(--ink);font:inherit;font-size:16px;line-height:1.6;padding:12px 14px;-webkit-user-select:text;user-select:text}
+.wish-in::placeholder{color:rgba(217,179,204,.6)}
+.wish-row{display:flex;flex-direction:column;align-items:center;gap:12px}
+.wish-lan{width:64px;height:80px;margin:2px auto 0}
+.lan{position:fixed;left:var(--x,50%);bottom:-140px;z-index:22;pointer-events:none;width:calc(72px*var(--s,1));animation:lanUp var(--t,9s) cubic-bezier(.35,0,.65,1) var(--d,0s) forwards}
+.lan .sw{animation:sway 2.6s ease-in-out infinite alternate;transform-origin:50% 0}
+.lan-b,.wish-lan{position:relative;aspect-ratio:72/92;border-radius:42% 42% 20% 20%/32% 32% 16% 16%;background:radial-gradient(circle at 50% 78%,#fff6cf 0%,#ffc06a 28%,#ff6f96 72%,#a8286a 100%);box-shadow:0 0 28px 8px rgba(255,160,90,.55),0 0 70px 18px rgba(255,95,174,.3)}
+.lan-b::before,.wish-lan::before{content:"";position:absolute;left:18%;right:18%;top:-6%;height:10%;border-radius:50%;background:#7a1e4f}
+.lan-b::after,.wish-lan::after{content:"";position:absolute;left:50%;bottom:9%;width:16%;aspect-ratio:1/1.5;transform:translateX(-50%);border-radius:50% 50% 50% 50%/60% 60% 40% 40%;background:radial-gradient(circle at 50% 70%,#fff,#ffe08a 55%,rgba(255,180,60,0) 75%);animation:flick .18s ease-in-out infinite alternate}
+.lan-cap{position:absolute;left:50%;top:calc(100% + 12px);transform:translateX(-50%);width:min(78vw,300px);text-align:center;font-family:var(--f-display);font-size:1.15rem;line-height:1.45;color:#ffeccc;text-shadow:0 0 12px rgba(255,120,80,.9),0 0 24px rgba(255,95,174,.6);animation:capFade 9s linear forwards}
+@keyframes lanUp{0%{bottom:-140px;transform:translateX(-50%) scale(1)}100%{bottom:115vh;transform:translateX(calc(-50% + var(--dx,0px))) scale(.3)}}
+@keyframes sway{from{transform:rotate(-5deg)}to{transform:rotate(5deg)}}
+@keyframes flick{from{transform:translateX(-50%) scale(1)}to{transform:translateX(-50%) scale(1.15,1.25)}}
+@keyframes capFade{0%,45%{opacity:1}70%,100%{opacity:0}}
+.gm-hud{display:flex;justify-content:space-around;margin:0 auto 8px;max-width:420px;font-size:.88rem;color:var(--dim)}
+.gm-hud b{font-family:var(--f-latin);font-size:1.25rem;color:#fff;font-variant-numeric:tabular-nums;margin-left:4px}
+.gm{position:relative;height:min(52vh,380px);max-width:420px;margin:0 auto;border-radius:16px;overflow:hidden;border:1px solid var(--line);background:radial-gradient(120% 80% at 50% 0%,rgba(168,85,247,.25),rgba(10,3,18,.6));touch-action:none}
+.gm canvas{position:absolute;inset:0;width:100%;height:100%}
+.gm-over{position:absolute;inset:0;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:10px;padding:16px;background:rgba(20,6,26,.6)}
+.gm-over p{margin:0;font-family:var(--f-display);font-size:1.3rem;color:#fff;line-height:1.4}
+.gm-over .big{font-family:var(--f-latin);font-size:2.6rem;font-weight:700;color:var(--pink-2);text-shadow:0 0 18px var(--pink)}
 @media (max-height:640px){.pad{grid-template-columns:repeat(3,60px);gap:10px 20px}.pad button{width:60px;height:60px;font-size:1.35rem}.l-ico{width:50px;height:50px;font-size:1.3rem}}
 @media (max-width:360px){.dock button{min-width:44px;font-size:.62rem;padding:6px 4px}.dock{gap:2px}}
-@media (max-width:420px){.dock button{min-width:48px;padding:6px 6px}.hint{display:none}}
+@media (max-width:420px){.dock{gap:2px;padding:5px}.dock button{min-width:44px;padding:6px 3px;font-size:.62rem}.dock button span{font-size:1.15rem}.hint{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
 </head>
 <body>
 <canvas id="gl" aria-label="จักรวาลของเรา ลากเพื่อหมุน แตะรูปหรือไอคอนเพื่อเปิด"></canvas>
 <div id="flash"></div>
+<canvas id="fx" aria-hidden="true"></canvas>
 
 <div id="gate">
   <div class="g-card">
@@ -205,7 +234,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 </div>
 
 <div class="bar" id="bar">
-  <span class="hint">ลากเพื่อหมุนจักรวาล · แตะรูปหรือไอคอนเพื่อเปิด</span>
+  <div class="bl"><span class="hcount" id="hcount" hidden>♡ 0/10</span><span class="hint">ลากเพื่อหมุนจักรวาล · แตะรูปหรือไอคอนเพื่อเปิด</span></div>
   <button class="round" id="musicBtn" type="button" aria-pressed="false" aria-label="เปิดหรือปิดเพลง">♪</button>
 </div>
 <div id="hero"><p id="heroK">11.12.2565 — 11.10.2569</p><h1 id="heroT">สุขสันต์วันครบรอบ 3 ปี 10 เดือน</h1></div>
@@ -215,6 +244,8 @@ button{font:inherit;color:inherit;cursor:pointer}
   <button type="button" data-open="cards"><span>🃏</span>การ์ด</button>
   <button type="button" data-open="puzzle"><span>🧩</span>ต่อรูป</button>
   <button type="button" data-open="count"><span>⏳</span>นับวัน</button>
+  <button type="button" data-open="wish"><span>🏮</span>ขอพร</button>
+  <button type="button" data-open="game"><span>🎮</span>เกม</button>
   <button type="button" data-open="photo"><span>🖼️</span>อัลบั้ม</button>
 </nav>
 
@@ -227,24 +258,26 @@ button{font:inherit;color:inherit;cursor:pointer}
 /* ====== แก้ข้อมูลตรงนี้ ====== */
 const CONFIG={
   to:'เธอ',                 // ชื่อแฟน
-  from:'ฉัน',               // ชื่อเรา
+  from:'เค้า',               // ชื่อเรา
   start:'2022-12-11',       // วันที่เริ่มคบ (ค.ศ.)
   surprise:'2026-10-11',    // วันที่จะเปิดให้ดู (3 ปี 10 เดือน)
-  letter:'ถึงเธอ คนที่ฉันรักที่สุด\n\nวันที่ 11 ธันวาคม 2565 คือวันแรกของเรา ตอนนั้นฉันไม่รู้เลยว่าวันธรรมดาวันหนึ่ง จะกลายเป็นวันที่สำคัญที่สุดในชีวิต จนถึงวันนี้ผ่านมาแล้ว 3 ปี 10 เดือน หรือ {DAYS} วัน ที่ฉันได้ตื่นขึ้นมาพร้อมความรู้สึกว่า โชคดีจังที่มีเธอ\n\nฉันยังจำได้ดีทุกอย่าง รูปแรก ๆ ที่เราถ่ายด้วยกันตอนที่ยังเขินกันอยู่ วันที่นั่งรถไฟฟ้า นั่งรถเมล์ไปไหนต่อไหนด้วยกัน เธอเอาหัวมาพิงไหล่ฉันแล้วหลับไปทั้งทาง คืนที่นั่งดูไฟเมืองจากที่สูง วันที่ไปทุ่งทานตะวันแล้วถ่ายรูปกลับหัวจนเมื่อยคอ ทุกช่วงเวลาที่คนอื่นอาจมองว่าธรรมดา สำหรับฉันมันคือของมีค่าที่สุดที่เก็บไว้ในใจ\n\nขอบคุณที่อยู่ข้าง ๆ กันมาตลอด ทั้งวันที่ฉันอารมณ์ดี และวันที่ฉันงี่เง่าจนตัวเองยังเบื่อ ขอบคุณที่อดทนกับนิสัยแย่ ๆ ของฉัน ขอบคุณที่ไม่เคยปล่อยมือ แม้ในวันที่เราทะเลาะกัน หรือวันที่ต่างคนต่างเหนื่อยจนไม่อยากพูดอะไร เธอทำให้ฉันรู้ว่าความรักไม่ได้มีแค่วันที่สวยงาม แต่คือการเลือกกันและกันซ้ำ ๆ ในทุกวัน\n\nฉันรักรอยยิ้มของเธอ รักเวลาเธอหัวเราะเสียงดังกับเรื่องไร้สาระ รักเวลาเธอแต่งตัวสวยแล้วถามว่าเป็นยังไง รักเวลาเธอง่วงแล้วพูดไม่รู้เรื่อง รักแม้กระทั่งเวลาเธองอนแล้วทำหน้ายุ่ง ๆ ใส่ เธอคือบ้านที่ฉันอยากกลับไปหาทุกครั้งที่เหนื่อย และเป็นคนแรกที่ฉันอยากเล่าให้ฟังทุกครั้งที่มีเรื่องดี ๆ\n\nถ้าวันไหนเธอรู้สึกไม่มั่นใจ รู้สึกว่าตัวเองไม่ดีพอ อยากให้กลับมาเปิดจดหมายฉบับนี้อีกครั้ง แล้วจำไว้ว่ามีคนคนหนึ่งที่มองเห็นเธอสวยที่สุด เก่งที่สุด และน่ารักที่สุดเสมอ ไม่ว่าโลกจะใจร้ายกับเธอแค่ไหน ฉันจะยืนอยู่ข้างเธอตรงนี้ ไม่ไปไหน\n\nต่อจากนี้ฉันไม่กล้าสัญญาว่าทุกวันจะมีแต่ความสุข แต่ฉันสัญญาว่าจะพยายามทำให้เธอยิ้มให้ได้มากที่สุด จะเป็นคนที่เธอพึ่งพาได้ จะฟังเธอให้มากขึ้น จะใจร้อนให้น้อยลง จะจำวันสำคัญของเราทุกวัน และจะรักเธอให้มากขึ้นกว่าเมื่อวานทุกวัน\n\nยังมีอีกหลายที่ที่อยากพาเธอไป ยังมีอีกหลายรูปที่อยากถ่ายด้วยกัน ยังมีอีกหลายปีที่อยากนับไปพร้อมกับเธอ จาก 3 ปี 10 เดือน เป็น 4 ปี 10 ปี จนถึงวันที่เราแก่แล้วนั่งดูรูปพวกนี้ด้วยกันแล้วหัวเราะว่าตอนนั้นเราตลกกันจัง\n\nขอบคุณที่เป็นจักรวาลทั้งใบของฉัน\nสุขสันต์วันครบรอบ 3 ปี 10 เดือนนะ\nฉันรักเธอ วันนี้ พรุ่งนี้ และทุก ๆ วันต่อจากนี้',
-  sign:'รักเธอที่สุด',
+  letter:'ถึงเธอ\n\n11 ธันวาคม 2565 คือวันแรกของเรา ตอนนั้นเค้าไม่คิดเลยว่าจะมาไกลขนาดนี้ ตอนนี้ก็ 3 ปี 10 เดือนแล้วนะ หรือ {DAYS} วัน\n\nขอบคุณที่อยู่ด้วยกันมาตลอดนะ ทั้งวันที่เค้าอารมณ์ดี และวันที่เค้างี่เง่า ขอบคุณที่ไม่ปล่อยมือกัน แม้วันที่ทะเลาะกันหรือเหนื่อยกันทั้งคู่\n\nเค้าชอบตอนเธอยิ้ม ตอนเธอหัวเราะเสียงดัง ตอนเธอง่วงแล้วพูดไม่รู้เรื่อง หรือแม้แต่ตอนงอนแล้วทำหน้ายุ่ง ๆ ใส่ เธอเป็นคนแรกที่เค้าอยากเล่าให้ฟังทุกครั้งที่มีเรื่องดี ๆ\n\nวันไหนที่เธอไม่มั่นใจในตัวเอง กลับมาอ่านอันนี้นะ สำหรับเค้า เธอน่ารักและเก่งเสมอ\n\nเค้าสัญญาไม่ได้ว่าทุกวันจะมีแต่เรื่องดี แต่เค้าจะพยายามทำให้เธอยิ้มให้ได้เยอะที่สุด จะฟังเธอให้มากขึ้น และใจร้อนให้น้อยลง\n\nยังมีอีกหลายที่ที่อยากไปด้วยกัน อีกหลายรูปที่อยากถ่ายด้วยกัน อยู่ด้วยกันไปนาน ๆ นะ\n\nสุขสันต์วันครบรอบ 3 ปี 10 เดือนนะ\nรักเธอนะ',
+  sign:'จากเค้า',
   // การ์ดทำนาย: แก้ข้อความได้ (\n\n = ขึ้นย่อหน้าใหม่, บรรทัดสุดท้ายคือคำแนะนำจากไพ่)
   fortunes:[
-    {num:'XVII',name:'ดวงดาว',sym:'⭐',kw:'ความหวัง · แสงนำทาง',
-     text:'ไพ่ดวงดาวบอกว่า ช่วงนี้เธออาจเหนื่อยกับหลายเรื่อง บางวันก็รู้สึกเหมือนต้องแบกทุกอย่างไว้คนเดียว แต่ไม่ต้องกลัวนะ เพราะมีดาวดวงหนึ่งคอยส่องทางให้เธออยู่เสมอ ดาวดวงนั้นไม่ได้อยู่ไกลถึงฟ้าหรอก มันนั่งอยู่ข้าง ๆ เธอตรงนี้เอง\n\nตลอด 3 ปี 10 เดือนที่ผ่านมา เธอเป็นแสงสว่างในวันที่ฉันมองไม่เห็นทาง ต่อจากนี้ขอให้ฉันได้เป็นแสงสว่างให้เธอบ้าง ไม่ว่าคืนไหนจะมืดแค่ไหน ขอให้จำไว้ว่าเธอไม่เคยต้องเดินคนเดียว\n\nคำแนะนำจากไพ่: หลับตาแล้วขอพรได้เลย ดาวดวงนี้รับฟังเธอเสมอ'},
-    {num:'XVIII',name:'พระจันทร์',sym:'🌙',kw:'ความคิดถึง · คืนที่ไม่หลับ',
-     text:'ไพ่พระจันทร์มาพร้อมความคิดถึงที่ล้นจนเก็บไว้ไม่ไหว ไพ่บอกว่ามีคนคนหนึ่งชอบเปิดรูปเธอดูก่อนนอน แล้วยิ้มอยู่คนเดียวเหมือนคนบ้า คนคนนั้นคิดถึงเธอได้ แม้เพิ่งแยกกันมาไม่ถึงห้านาที\n\nพระจันทร์ไม่ได้เต็มดวงทุกคืน บางคืนก็เว้าแหว่ง บางคืนก็หายไปหลังเมฆ ความรักของเราก็คงมีวันแบบนั้นบ้าง วันที่งอนกัน วันที่เหนื่อยจนไม่อยากคุย แต่สุดท้ายพระจันทร์ก็กลับมาเต็มดวงเสมอ เหมือนที่เรากลับมาจับมือกันได้ทุกครั้ง\n\nคำแนะนำจากไพ่: คืนนี้โทรคุยกันนาน ๆ นะ ไม่ต้องรีบวาง'},
-    {num:'XIX',name:'ดวงอาทิตย์',sym:'☀️',kw:'ความสุข · วันที่สดใส',
-     text:'นี่คือไพ่แห่งความสุขที่สว่างที่สุดในสำรับ ไพ่บอกว่าช่วงเวลาดี ๆ ของเธอกำลังเดินทางมา และจะมีใครบางคนยืนรออยู่ตรงนั้น เพื่อยิ้มไปพร้อมกับเธอ\n\nจำวันที่เราหัวเราะจนท้องแข็งได้ไหม วันที่ไม่ได้ทำอะไรพิเศษเลย แค่นั่งรถไปด้วยกัน กินข้าวด้วยกัน ถ่ายรูปเบลอ ๆ ด้วยกัน แค่นั้นก็มีความสุขมากแล้ว ไพ่ดวงอาทิตย์บอกว่าวันแบบนั้นจะมีอีกเยอะมาก เยอะจนเมมโทรศัพท์เต็ม\n\nคำแนะนำจากไพ่: ยิ้มเยอะ ๆ นะ เพราะรอยยิ้มของเธอคือสิ่งที่ฉันชอบที่สุดในโลก'},
-    {num:'VI',name:'คู่รัก',sym:'💞',kw:'การเลือก · พรหมลิขิต',
-     text:'ไพ่คู่รักจะปรากฏเมื่อมีคนสองคนที่ถูกกำหนดมาให้เจอกัน แต่ไพ่ใบนี้ไม่ได้บอกว่าความรักต้องสมบูรณ์แบบ มันบอกว่าคนสองคนเลือกกันและกันซ้ำ ๆ ทุกวัน แม้ในวันที่ไม่ง่ายเลยก็ตาม\n\nตั้งแต่วันที่ 11 ธันวาคม 2565 จนถึงวันนี้ ฉันตื่นมาแล้วเลือกเธอมาแล้วกว่า {DAYS} ครั้ง และจะเลือกเธอต่อไปอีกทุกเช้าที่ลืมตาขึ้นมา ไม่ว่าเธอจะอารมณ์ดีหรืออารมณ์เสีย ผมฟูหรือแต่งหน้าสวย ก็ยังเป็นเธอคนเดิมที่ฉันรักที่สุด\n\nคำแนะนำจากไพ่: กอดกันแน่น ๆ หนึ่งที ไม่ต้องมีเหตุผล'},
-    {num:'XXI',name:'จักรวาล',sym:'🪐',kw:'อนาคต · บทใหม่ของเรา',
-     text:'ไพ่จักรวาลคือไพ่ใบสุดท้ายของสำรับ หมายถึงการเดินทางที่ครบรอบอย่างสมบูรณ์ และการเริ่มต้นบทใหม่ที่ยิ่งใหญ่กว่าเดิม\n\nไพ่บอกว่าอนาคตของเธอกว้างใหญ่เหมือนจักรวาลนี้ อยากไปที่ไหน อยากเป็นอะไร อยากฝันใหญ่แค่ไหนก็ได้ ขอแค่เหลือที่ว่างเล็ก ๆ ข้างตัวเธอ ให้ฉันได้เดินไปด้วยก็พอ ทุกรูปที่ลอยอยู่รอบ ๆ ตรงนี้เป็นแค่บทแรก ๆ ของเราเท่านั้น ยังมีอีกหลายบทที่รอให้เราเขียนด้วยกัน\n\nคำแนะนำจากไพ่: เริ่มวางแผนทริปถัดไปของเราได้เลย'}
+    {num:'XVII',name:'ดวงดาว',sym:'⭐',kw:'ความหวัง',
+     text:'ช่วงนี้เธออาจเหนื่อยหลายเรื่อง แต่ไม่ต้องแบกไว้คนเดียวนะ เค้าอยู่ตรงนี้เสมอ\n\nที่ผ่านมาเธอช่วยเค้าไว้เยอะมาก ต่อจากนี้ให้เค้าดูแลเธอบ้างนะ\n\nคำแนะนำจากไพ่: ลองหลับตาแล้วขอพรสักข้อ'},
+    {num:'XVIII',name:'พระจันทร์',sym:'🌙',kw:'ความคิดถึง',
+     text:'ไพ่ใบนี้บอกว่ามีคนคิดถึงเธออยู่ คนนั้นชอบเปิดรูปเธอดูก่อนนอน แล้วก็ยิ้มอยู่คนเดียว\n\nบางวันเราก็งอนกันบ้าง เหนื่อยจนไม่อยากคุยบ้าง แต่สุดท้ายเราก็กลับมาคุยกันได้ทุกครั้ง\n\nคำแนะนำจากไพ่: คืนนี้โทรคุยกันนาน ๆ หน่อยนะ'},
+    {num:'XIX',name:'ดวงอาทิตย์',sym:'☀️',kw:'ความสุข',
+     text:'ไพ่ใบนี้บอกว่าเรื่องดี ๆ กำลังจะมา และเค้าจะอยู่ตรงนั้นด้วย\n\nจำวันที่เราหัวเราะกันจนท้องแข็งได้ไหม ไม่ได้ทำอะไรพิเศษเลย แค่นั่งรถ กินข้าว ถ่ายรูปเบลอ ๆ ด้วยกัน แค่นั้นก็มีความสุขแล้ว วันแบบนั้นจะมีอีกเยอะเลย\n\nคำแนะนำจากไพ่: ยิ้มเยอะ ๆ นะ เค้าชอบรอยยิ้มเธอที่สุด'},
+    {num:'VI',name:'คู่รัก',sym:'💞',kw:'การเลือกกัน',
+     text:'ไพ่คู่รักไม่ได้บอกว่าความรักต้องสมบูรณ์แบบ แค่บอกว่าเราเลือกกันทุกวัน\n\nตั้งแต่ 11 ธันวาคม 2565 เค้าเลือกเธอมาแล้ว {DAYS} วัน และจะเลือกเธอต่อไปทุกวัน\n\nคำแนะนำจากไพ่: กอดกันแน่น ๆ หนึ่งที'},
+    {num:'XXI',name:'จักรวาล',sym:'🪐',kw:'บทใหม่ของเรา',
+     text:'ไพ่จักรวาลคือการจบรอบหนึ่ง แล้วเริ่มบทใหม่\n\nอยากไปไหน อยากเป็นอะไร ไปได้เลยนะ ขอแค่ให้เค้าได้เดินไปข้าง ๆ ด้วย รูปที่ลอยอยู่ตรงนี้เป็นแค่ช่วงแรกของเราเอง\n\nคำแนะนำจากไพ่: มาวางแผนเที่ยวครั้งหน้ากัน'}
   ],
+  wishDefault:'ขอให้เราได้อยู่ด้วยกันไปนาน ๆ',
+  secret:'เก่งมากเลย หาเจอครบทุกดวง\nหัวใจของเค้าก็อยู่กับเธอครบทุกดวงเหมือนกัน\nรักเธอนะ',
   puzzlePhoto:10,
   passcodes:['111265','111222']   // รหัสเข้า (วว ดด ปป) ใส่ได้หลายแบบ
 };
@@ -270,16 +303,31 @@ $('heroK').textContent=`${th(ST,{day:'numeric',month:'short',year:'numeric'})}  
 
 /* ---------- music box ---------- */
 let ac=null,playing=false,loopT;
-function ctx(){if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();}catch(e){}}return ac;}
+let master=null,silentEl=null;
+function ctx(){if(!ac){try{ac=new (window.AudioContext||window.webkitAudioContext)();
+  const comp=ac.createDynamicsCompressor();comp.threshold.value=-14;comp.ratio.value=4;master=ac.createGain();master.gain.value=2.6;master.connect(comp);comp.connect(ac.destination);}catch(e){}}return ac;}
+/* unlock sound on phones: must run inside a tap. Plays a silent clip so iPhone also plays with the silent switch on */
+function silentWav(){const n=4000,b=new Uint8Array(44+n),v=new DataView(b.buffer),w=(o,t)=>[...t].forEach((c,i)=>b[o+i]=c.charCodeAt(0));
+  w(0,'RIFF');v.setUint32(4,36+n,true);w(8,'WAVEfmt ');v.setUint32(16,16,true);v.setUint16(20,1,true);v.setUint16(22,1,true);v.setUint32(24,8000,true);v.setUint32(28,8000,true);v.setUint16(32,1,true);v.setUint16(34,8,true);w(36,'data');v.setUint32(40,n,true);b.fill(128,44);
+  return URL.createObjectURL(new Blob([b],{type:'audio/wav'}));}
+function unlockAudio(){const a=ctx();if(!a)return;
+  try{if(navigator.audioSession)navigator.audioSession.type='playback';}catch(e){}
+  try{if(!silentEl){silentEl=new Audio(silentWav());silentEl.loop=true;silentEl.setAttribute('playsinline','');silentEl.volume=0.01;}const pr=silentEl.play();if(pr&&pr.catch)pr.catch(()=>{});}catch(e){}
+  if(a.state!=='running'){try{a.resume();}catch(e){}}
+  try{const bf=a.createBuffer(1,1,22050),src=a.createBufferSource();src.buffer=bf;src.connect(a.destination);src.start(0);}catch(e){}}
+['pointerup','touchend','click','keydown'].forEach(ev=>document.addEventListener(ev,unlockAudio,{passive:true}));
 function note(f,when,dur=1.6,vol=.1){const a=ctx();if(!a)return;const o=a.createOscillator(),o2=a.createOscillator(),g=a.createGain();
   o.type='triangle';o.frequency.value=f;o2.type='sine';o2.frequency.value=f*2;g.gain.setValueAtTime(0,when);g.gain.linearRampToValueAtTime(vol,when+.01);g.gain.exponentialRampToValueAtTime(.0001,when+dur);
-  o.connect(g);o2.connect(g);g.connect(a.destination);o.start(when);o2.start(when);o.stop(when+dur);o2.stop(when+dur);}
+  o.connect(g);o2.connect(g);g.connect(master||a.destination);o.start(when);o2.start(when);o.stop(when+dur);o2.stop(when+dur);}
 const N={C5:523.25,D5:587.33,E5:659.25,G5:783.99,A5:880,C6:1046.5,G4:392,A4:440,F5:698.46};
 const tune=[['E5',0],['G5',.5],['A5',1],['G5',1.5],['E5',2],['D5',2.75],['C5',3],['D5',3.5],['E5',4],['G5',4.5],['E5',5],['D5',5.5],['C5',6],['A4',7],['C5',7.5],['D5',8],['E5',8.5],['G5',9],['A5',9.75],['C6',10],['A5',10.5],['G5',11],['E5',11.5],['D5',12],['C5',13]];
 function playLoop(){const a=ctx();if(!a)return;const t0=a.currentTime+.1,b=.44;tune.forEach(([n,bt])=>note(N[n],t0+bt*b));[['C5',0],['A4',4],['F5',8],['G4',12]].forEach(([n,bt])=>note(N[n]/2,t0+bt*b,2.6,.06));loopT=setTimeout(playLoop,14*b*1000);}
 function chime(f,v=.05){if(ac&&ac.state==='running')note(f,ac.currentTime,1.1,v);}
-function setMusic(on){const a=ctx();if(!a||on===playing)return;playing=on;$('musicBtn').setAttribute('aria-pressed',on);if(on){a.resume();playLoop();}else{clearTimeout(loopT);a.suspend();}}
-$('musicBtn').onclick=()=>setMusic(!playing);
+function setMusic(on){const a=ctx();if(!a||on===playing)return;playing=on;$('musicBtn').setAttribute('aria-pressed',on);
+  if(master)master.gain.value=on?2.6:0;
+  if(on){unlockAudio();playLoop();setTimeout(()=>{if(playing&&a.state!=='running')toast('แตะปุ่ม ♪ มุมขวาบนเพื่อเปิดเพลง',true,3500);},1200);}
+  else{clearTimeout(loopT);try{silentEl&&silentEl.pause();}catch(e){}}}
+$('musicBtn').onclick=()=>{unlockAudio();setMusic(!playing);};
 
 
 /* ---------- passcode ---------- */
@@ -294,7 +342,7 @@ function press(k){
   if(code.length===6)setTimeout(check,180);
 }
 function check(){
-  if(CONFIG.passcodes.includes(code)){$('dots').classList.add('ok');$('lMsg').textContent='ถูกต้อง ♡ ยินดีต้อนรับสู่จักรวาลของเรา';chime(1046,.07);setTimeout(()=>chime(1318,.07),150);
+  if(CONFIG.passcodes.includes(code)){$('dots').classList.add('ok');$('lMsg').textContent='ถูกแล้ว ♡ เข้ามาเลย';chime(1046,.07);setTimeout(()=>chime(1318,.07),150);
     setTimeout(()=>{$('lock').classList.add('gone');$('gate').classList.add('ready');},900);return;}
   tries++;const dz=$('dots');dz.classList.remove('bad');void dz.offsetWidth;dz.classList.add('bad');chime(220,.06);
   $('lMsg').textContent=tries>=4?'คำใบ้: วันที่ 11 ของเดือนสุดท้ายของปี 2565':tries>=2?'คำใบ้: วันแรกที่เราเป็นแฟนกัน เช่น 010166':'ยังไม่ถูกน้า ลองใหม่อีกที';
@@ -304,12 +352,38 @@ $('pad').addEventListener('click',e=>{const b=e.target.closest('button');if(b)pr
 document.addEventListener('keydown',e=>{if($('lock').classList.contains('gone'))return;if(/^[0-9]$/.test(e.key))press(e.key);else if(e.key==='Backspace')press('back');});
 
 /* ---------- toast ---------- */
-let toastT;function toast(t){const el=$('toast');el.textContent=t;el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),1400);}
+let toastT;function toast(t,sm,ms){const el=$('toast');el.textContent=t;el.classList.toggle('sm',!!sm);el.classList.add('on');clearTimeout(toastT);toastT=setTimeout(()=>el.classList.remove('on'),ms||1400);}
+
+/* ---------- heart confetti ---------- */
+const fx=$('fx'),fg=fx.getContext('2d');let parts=[],fxOn=false;
+function fxSize(){const d=Math.min(devicePixelRatio||1,2);fx.width=innerWidth*d;fx.height=innerHeight*d;fg.setTransform(d,0,0,d,0,0);}
+fxSize();addEventListener('resize',fxSize);
+const FXC=['#ff5fae','#ff9ccf','#ffd6ec','#a855f7','#ffffff','#ffd27a'];
+function fxRun(){if(!fxOn){fxOn=true;requestAnimationFrame(fxLoop);}}
+function burst(x,y,n=40,o={}){if(reduce)return;const sp=o.spread||1;for(let i=0;i<n;i++){const a=Math.random()*6.283,v=(2+Math.random()*6)*sp;
+  parts.push({x,y,vx:Math.cos(a)*v,vy:Math.sin(a)*v-2-(o.up||0),g:.15,life:1,dec:.008+Math.random()*.012,s:5+Math.random()*9,c:FXC[Math.random()*FXC.length|0],h:Math.random()<.65,r:Math.random()*6,vr:(Math.random()-.5)*.3});}fxRun();}
+function floatHeart(x,y){if(reduce)return;parts.push({x:x+(Math.random()-.5)*50,y,vx:(Math.random()-.5)*1.2,vy:-1.5-Math.random()*2.5,g:-.02,life:1,dec:.012+Math.random()*.01,s:5+Math.random()*7,c:FXC[Math.random()*3|0],h:true,r:0,vr:0});fxRun();}
+function fxLoop(){fg.clearRect(0,0,innerWidth,innerHeight);parts=parts.filter(p=>p.life>0);
+  for(const p of parts){p.vy+=p.g;p.vx*=.99;p.x+=p.vx;p.y+=p.vy;p.r+=p.vr;p.life-=p.dec;fg.globalAlpha=Math.max(0,Math.min(1,p.life*1.6));fg.fillStyle=p.c;
+    fg.save();fg.translate(p.x,p.y);fg.rotate(p.r*.3);if(p.h){heartShape(fg,0,p.s*.35,p.s);fg.fill();}else fg.fillRect(-p.s/2,-p.s/5,p.s,p.s*.4);fg.restore();}
+  fg.globalAlpha=1;if(parts.length)requestAnimationFrame(fxLoop);else{fxOn=false;fg.clearRect(0,0,innerWidth,innerHeight);}}
+const ctr=el=>{const r=el.getBoundingClientRect();return[r.left+r.width/2,r.top+r.height/2];};
+let stopGame=()=>{};
+function releaseLanterns(text){
+  const mk=(o)=>{const el=document.createElement('div');el.className='lan';Object.entries(o.v).forEach(([k,v])=>el.style.setProperty(k,v));
+    el.innerHTML=`<div class="sw"><div class="lan-b"></div>${o.cap?`<div class="lan-cap">${esc(o.cap)}</div>`:''}</div>`;document.body.appendChild(el);
+    el.addEventListener('animationend',e=>{if(e.target===el)el.remove();});setTimeout(()=>el.remove(),16000);};
+  mk({cap:text,v:{'--x':'50%','--s':'1.15','--t':reduce?'0.01s':'10s','--dx':'20px'}});
+  if(!reduce)for(let i=0;i<9;i++)mk({v:{'--x':(8+Math.random()*84)+'%','--s':(.35+Math.random()*.45).toFixed(2),'--t':(9+Math.random()*5).toFixed(1)+'s','--d':(.6+i*.45+Math.random()*.4).toFixed(2)+'s','--dx':((Math.random()-.5)*120|0)+'px'}});
+  [784,988,1175,1568].forEach((f,i)=>setTimeout(()=>chime(f,.05),i*220));
+  let k=0;const sp=setInterval(()=>{floatHeart(innerWidth*(.3+Math.random()*.4),innerHeight*.95);if(++k>40)clearInterval(sp);},120);
+  setTimeout(()=>toast('คำอธิษฐานลอยไปถึงดวงดาวแล้ว ♡',true,3200),6500);
+}
 
 /* ---------- modals ---------- */
 let modalOpen=false,typeT,cdT,phIdx=0;
 function openModal(type,arg){
-  clearTimeout(typeT);clearInterval(cdT);const b=$('mBody');modalOpen=true;$('modal').hidden=false;chime(1046);
+  clearTimeout(typeT);clearInterval(cdT);stopGame();const b=$('mBody');modalOpen=true;$('modal').hidden=false;chime(1046);
   if(type==='letter'){
     b.innerHTML=`<h2>💌 จดหมายถึง${esc(CONFIG.to)}</h2><p class="k">${th(REF)}</p><p class="letter" id="lt"></p><span class="letter-sign">— ${esc(CONFIG.sign)}</span>`;
     const el=$('lt'),card=b.parentElement,txt=CONFIG.letter.replace('{DAYS}',DAYS.toLocaleString('th-TH'));let done=false;
@@ -321,7 +395,7 @@ function openModal(type,arg){
   else if(type==='cards'){
     const deck=CONFIG.fortunes.slice().sort(()=>Math.random()-.5),n=deck.length;
     b.innerHTML=`<h2>🔮 ไพ่ทำนายรัก</h2><p class="k">ตั้งจิตถึงเรื่องของเราสองคน แล้วเลือกไพ่ 1 ใบ</p><div class="deck" id="deck">${deck.map((c,i)=>{const a=(i-(n-1)/2)*11;return `<button class="tc" type="button" data-i="${i}" style="--a:${a}deg;--d:${(.15+i*.09).toFixed(2)}s" aria-label="ไพ่ใบที่ ${i+1}"><span class="inner"><span class="face back">✦<small>OUR STARS</small></span><span class="face front"><b>${esc(c.num)}</b><span class="sym">${c.sym}</span><span>${esc(c.name)}</span></span></span></button>`;}).join('')}</div><div id="reading"></div>`;
-    $('deck').onclick=e=>{const c=e.target.closest('.tc');const d=$('deck');if(!c||d.classList.contains('picked'))return;d.classList.add('picked');c.classList.add('sel');chime(784,.05);setTimeout(()=>chime(1175,.06),500);
+    $('deck').onclick=e=>{const c=e.target.closest('.tc');const d=$('deck');if(!c||d.classList.contains('picked'))return;d.classList.add('picked');c.classList.add('sel');setTimeout(()=>burst(...ctr(c),45),900);chime(784,.05);setTimeout(()=>chime(1175,.06),500);
       const f=deck[+c.dataset.i],parts=f.text.replace('{DAYS}',DAYS.toLocaleString('th-TH')).split('\n\n');
       const tip=parts.length>1?parts.pop():'';
       $('reading').innerHTML=`<div class="reading"><h3>ไพ่${esc(f.name)}</h3><span class="kw">${esc(f.num)} · ${esc(f.kw)}</span>${parts.map(p=>`<p>${esc(p)}</p>`).join('')}${tip?`<p class="tip">${esc(tip)}</p>`:''}</div><div class="r-actions"><button class="pbtn" id="again" type="button">สับไพ่ใหม่</button></div>`;
@@ -338,7 +412,7 @@ function openModal(type,arg){
     pz.onclick=e=>{const t=e.target.closest('button');if(!t||pz.classList.contains('done'))return;const i=+t.dataset.i;
       if(sel===null){sel=i;t.classList.add('sel');chime(880,.03);return;}
       [order[sel],order[i]]=[order[i],order[sel]];sel=null;draw();chime(988,.03);
-      if(order.every((v,k)=>v===k)){pz.classList.add('done');$('pzMsg').textContent='ต่อครบแล้ว! เก่งที่สุดเลย รักนะ ♡';toast('ครบแล้ว ♡');chime(1318,.07);}};
+      if(order.every((v,k)=>v===k)){pz.classList.add('done');$('pzMsg').textContent='ครบแล้ว! เก่งมาก รักนะ ♡';burst(...ctr(pz),70,{spread:1.3});toast('ครบแล้ว ♡');chime(1318,.07);}};
   }
   else if(type==='count'){
     const st=ST;let next=new Date(today().getFullYear(),st.getMonth(),st.getDate());if(next<=today())next=new Date(next.getFullYear()+1,st.getMonth(),st.getDate());
@@ -355,8 +429,44 @@ function openModal(type,arg){
     let sx=null;$('phF').addEventListener('pointerdown',e=>sx=e.clientX);$('phF').addEventListener('pointerup',e=>{if(sx!=null&&Math.abs(e.clientX-sx)>40){phIdx=(phIdx+(e.clientX<sx?1:PHOTOS.length-1))%PHOTOS.length;show();}sx=null;});
     show();
   }
+  else if(type==='wish'){
+    b.innerHTML=`<h2>🏮 ขอพรวันครบรอบ</h2><p class="k">พิมพ์คำอธิษฐาน แล้วปล่อยโคมขึ้นไปหาดวงดาว</p><div class="wish-row"><div class="wish-lan" aria-hidden="true"></div><textarea class="wish-in" id="wishTxt" maxlength="80" placeholder="${esc(CONFIG.wishDefault)}" aria-label="คำอธิษฐาน"></textarea><button class="pbtn" id="wishGo" type="button">ปล่อยโคม 🏮</button></div>`;
+    $('wishGo').onclick=()=>{const t=($('wishTxt').value.trim()||CONFIG.wishDefault);closeModal();releaseLanterns(t);};
+  }
+  else if(type==='game'){
+    b.innerHTML=`<h2>🎮 เก็บหัวใจ</h2><p class="k">แตะหัวใจที่ร่วงลงมาให้ได้เยอะที่สุดใน 20 วินาที<br>💗 ได้ 1 แต้ม · 💛 ได้ 3 แต้ม · 🖤 โดนหัก 2 แต้ม</p><div class="gm-hud"><span>แต้ม<b id="gS">0</b></span><span>เวลา<b id="gT">20</b></span><span>สถิติ<b id="gB">0</b></span></div><div class="gm" id="gm"><canvas id="gc"></canvas><div class="gm-over" id="gO"><p>พร้อมไหม?</p><button class="pbtn" id="gGo" type="button">เริ่มเล่น</button></div></div>`;
+    let best=0;try{best=+localStorage.getItem('ourUniBest')||0;}catch(e){}$('gB').textContent=best;
+    const cv=$('gc'),wrap=$('gm'),d=Math.min(devicePixelRatio||1,2),W=wrap.clientWidth,H=wrap.clientHeight;cv.width=W*d;cv.height=H*d;const g=cv.getContext('2d');g.scale(d,d);
+    let items=[],pops=[],score=0,tLeft=20,lastT=0,spawn=0,running=false,raf=0;
+    const add=()=>{const r=Math.random(),k=r<.12?'gold':r<.28?'bad':'pink',sz=k==='gold'?20:18+Math.random()*10;
+      items.push({k,x:sz+Math.random()*(W-sz*2),y:-sz,s:sz,vy:(90+Math.random()*80)*(1+(20-tLeft)*.03)*(k==='gold'?1.35:1),w:Math.random()*6,
+        col:k==='gold'?'#ffd27a':k==='bad'?'#3a2a44':['#ff5fae','#ff7fc0','#ff9ccf'][Math.random()*3|0],glow:k==='gold'?'#ffcc4d':k==='bad'?'#000':'#ff5fae',pts:k==='gold'?3:k==='bad'?-2:1});};
+    const drawIt=it=>{g.save();g.translate(it.x,it.y);g.rotate(Math.sin(it.w)*.25);g.shadowColor=it.glow;g.shadowBlur=14;g.fillStyle=it.col;heartShape(g,0,it.s*.35,it.s);g.fill();
+      if(it.k==='bad'){g.shadowBlur=0;g.strokeStyle='#ff9ccf';g.lineWidth=2;g.beginPath();g.moveTo(0,-it.s*.55);g.lineTo(-it.s*.18,-it.s*.15);g.lineTo(it.s*.14,it.s*.05);g.lineTo(0,it.s*.4);g.stroke();}
+      else{g.shadowBlur=0;g.fillStyle='rgba(255,255,255,.55)';g.beginPath();g.ellipse(-it.s*.4,-it.s*.4,it.s*.16,it.s*.1,-.6,0,7);g.fill();}g.restore();};
+    const frame=now=>{if(!running)return;const dt=Math.min(.05,(now-lastT)/1000);lastT=now;tLeft-=dt;spawn-=dt;
+      if(spawn<=0){spawn=Math.max(.2,.55-(20-tLeft)*.017);add();if(tLeft<10&&Math.random()<.4)add();}
+      g.clearRect(0,0,W,H);items.forEach(it=>{it.y+=it.vy*dt;it.w+=dt*3;it.x+=Math.sin(it.w)*.5;drawIt(it);});items=items.filter(it=>it.y<H+it.s*2&&!it.hit);
+      pops=pops.filter(q=>(q.t-=dt)>0);pops.forEach(q=>{g.globalAlpha=Math.min(1,q.t*2);g.fillStyle=q.c;g.font='700 22px "Bai Jamjuree",sans-serif';g.textAlign='center';g.fillText(q.txt,q.x,q.y-(1-q.t)*40);g.globalAlpha=1;});
+      $('gT').textContent=Math.max(0,Math.ceil(tLeft));if(tLeft<=0){end();return;}raf=requestAnimationFrame(frame);};
+    const end=()=>{running=false;g.clearRect(0,0,W,H);const nb=score>best;if(nb){best=score;try{localStorage.setItem('ourUniBest',best);}catch(e){}$('gB').textContent=best;}
+      const msg=score>=30?'หัวใจเค้าโดนเธอเก็บไปหมดแล้ว':score>=18?'เก่งมาก! เก็บหัวใจได้เยอะเลย':'ลองอีกรอบนะ หัวใจยังรอให้เก็บอยู่';
+      $('gO').innerHTML=`<span class="big">${score}</span><p>${msg}</p>${nb&&score>0?'<small style="color:#ffe08a">สถิติใหม่!</small>':''}<button class="pbtn" id="gGo" type="button">เล่นอีกครั้ง</button>`;$('gO').hidden=false;$('gGo').onclick=start;
+      if(score>=18){burst(...ctr(wrap),90,{spread:1.4});chime(1318,.07);setTimeout(()=>chime(1568,.06),180);}};
+    const start=()=>{items=[];pops=[];score=0;tLeft=20;spawn=0;$('gS').textContent=0;$('gO').hidden=true;running=true;lastT=performance.now();raf=requestAnimationFrame(frame);};
+    stopGame=()=>{running=false;cancelAnimationFrame(raf);stopGame=()=>{};};
+    cv.addEventListener('pointerdown',e=>{if(!running)return;const r=cv.getBoundingClientRect(),x=e.clientX-r.left,y=e.clientY-r.top;let hit=null,bd=1e9;
+      items.forEach(it=>{const dd=Math.hypot(it.x-x,it.y-y);if(dd<it.s*1.5&&dd<bd){bd=dd;hit=it;}});if(!hit)return;hit.hit=true;score=Math.max(0,score+hit.pts);$('gS').textContent=score;
+      pops.push({x:hit.x,y:hit.y,t:1,txt:(hit.pts>0?'+':'')+hit.pts,c:hit.k==='bad'?'#c9b3d6':hit.k==='gold'?'#ffd27a':'#fff'});
+      if(hit.k==='bad'){chime(220,.06);try{navigator.vibrate&&navigator.vibrate(60);}catch(_){}}else{chime(hit.k==='gold'?1568:988+Math.random()*300,.05);burst(e.clientX,e.clientY,hit.k==='gold'?26:12,{spread:.7});}});
+    $('gGo').onclick=start;
+  }
+  else if(type==='secret'){
+    b.innerHTML=`<h2>🗝️ ข้อความลับ</h2><p class="k">เธอหาหัวใจเจอครบ ${floaters.length} ดวงแล้ว</p><p class="letter" style="text-align:center;min-height:0">${esc(CONFIG.secret)}</p>`;
+    setTimeout(()=>{burst(innerWidth/2,innerHeight/2,110,{spread:1.6});chime(1318,.07);setTimeout(()=>chime(1568,.07),160);setTimeout(()=>chime(2093,.06),320);},250);
+  }
 }
-function closeModal(){$('modal').hidden=true;modalOpen=false;clearTimeout(typeT);clearInterval(cdT);}
+function closeModal(){$('modal').hidden=true;modalOpen=false;clearTimeout(typeT);clearInterval(cdT);stopGame();}
 $('mClose').onclick=closeModal;
 $('modal').addEventListener('click',e=>{if(e.target.id==='modal')closeModal();});
 document.addEventListener('keydown',e=>{if(e.key==='Escape'&&modalOpen)closeModal();if(modalOpen&&$('phImg')){if(e.key==='ArrowRight')$('phX').click();if(e.key==='ArrowLeft')$('phP').click();}});
@@ -365,10 +475,11 @@ $('dock').addEventListener('click',e=>{const b=e.target.closest('[data-open]');i
 /* ---------- 3D ---------- */
 let gl=null;
 try{if(window.THREE){gl=new THREE.WebGLRenderer({canvas:$('gl'),antialias:true,powerPreference:'high-performance'});}}catch(e){gl=null;}
-let state='gate';
-function showUI(){const ng=$('nogl');if(ng)ng.hidden=false;$('bar').classList.add('show');$('dock').classList.add('show');$('hero').classList.add('show');setTimeout(()=>$('hero').classList.remove('show'),7000);}
+let state='gate',found=0;
+function updCount(){const el=$('hcount');el.textContent=`♡ ${found}/${floaters.length}`;el.classList.add('bump');setTimeout(()=>el.classList.remove('bump'),300);}
+function showUI(){const ng=$('nogl');if(ng)ng.hidden=false;if(gl&&floaters.length){updCount();$('hcount').hidden=false;setTimeout(()=>toast(`มีหัวใจซ่อนอยู่ ${floaters.length} ดวง ลองแตะหาให้ครบนะ ♡`,true,3200),1600);}$('bar').classList.add('show');$('dock').classList.add('show');$('hero').classList.add('show');setTimeout(()=>$('hero').classList.remove('show'),7000);}
 
-if(!gl){document.body.insertAdjacentHTML('beforeend','<div class="nogl" id="nogl" hidden>เครื่องนี้แสดงจักรวาล 3 มิติไม่ได้ แต่ยังเปิดจดหมาย การ์ด ต่อรูป และอัลบั้มจากเมนูด้านล่างได้ ♡</div>');}
+if(!gl){document.body.insertAdjacentHTML('beforeend','<div class="nogl" id="nogl" hidden>เครื่องนี้แสดงจักรวาล 3 มิติไม่ได้ แต่ยังเปิดจดหมาย การ์ด ต่อรูป เกม ขอพร และอัลบั้มจากเมนูด้านล่างได้ ♡</div>');}
 
 const scene=gl?new THREE.Scene():null;
 let camera,controls,warp,galaxy,heartPts,fountain,clickables=[],orbitGroup,floaters=[],stars,constel,photoSprites=[],shooters=[],nextShoot=2;
@@ -407,12 +518,19 @@ function build(){
    const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(c,3));
    stars=new THREE.Points(g,new THREE.PointsMaterial({size:.9,map:dot,vertexColors:true,transparent:true,depthWrite:false,blending:THREE.AdditiveBlending}));scene.add(stars);}
 
-  // warp tunnel
-  {const n=1400,p=new Float32Array(n*6),info=[];for(let i=0;i<n;i++){const a=Math.random()*6.283,r=.6+Math.pow(Math.random(),.6)*16,z=-Math.random()*220;info.push({x:Math.cos(a)*r,y:Math.sin(a)*r,z});}
-   const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));
-   const col=new Float32Array(n*6);for(let i=0;i<n;i++){const pk=Math.random()<.35;col.set(pk?[1,.45,.8,.3,.05,.25]:[1,1,1,.25,.25,.35],i*6);}
-   g.setAttribute('color',new THREE.BufferAttribute(col,3));
-   warp=new THREE.LineSegments(g,new THREE.LineBasicMaterial({vertexColors:true,transparent:true,blending:THREE.AdditiveBlending,depthWrite:false}));warp.userData={info,speed:14};warp.frustumCulled=false;scene.add(warp);}
+  // heart tunnel (replaces light-speed streaks)
+  {const hc=document.createElement('canvas');hc.width=hc.height=128;const hg=hc.getContext('2d');hg.shadowColor='#fff';hg.shadowBlur=14;hg.fillStyle='#fff';heartShape(hg,64,72,54);hg.fill();
+   hg.shadowBlur=0;hg.fillStyle='rgba(255,255,255,.9)';hg.beginPath();hg.ellipse(46,48,9,5,-.6,0,7);hg.fill();
+   const htex=new THREE.CanvasTexture(hc);
+   warp=new THREE.Group();warp.userData={speed:14,layers:[]};
+   const pal=[[1,.37,.68],[1,.61,.81],[1,.85,.93],[.66,.33,.97],[1,.2,.55]];
+   [[innerWidth<700?700:1100,.32],[innerWidth<700?140:220,.75]].forEach(([n,size])=>{
+     const p=new Float32Array(n*3),c=new Float32Array(n*3),info=[];
+     for(let i=0;i<n;i++){const a=Math.random()*6.283,r=.8+Math.pow(Math.random(),.7)*14;info.push({x:Math.cos(a)*r,y:Math.sin(a)*r,z:-Math.random()*160,w:Math.random()*6.283});c.set(pal[Math.random()*pal.length|0],i*3);}
+     const g=new THREE.BufferGeometry();g.setAttribute('position',new THREE.BufferAttribute(p,3));g.setAttribute('color',new THREE.BufferAttribute(c,3));
+     const pts=new THREE.Points(g,new THREE.PointsMaterial({size,map:htex,vertexColors:true,transparent:true,alphaTest:.02,depthWrite:false,blending:THREE.AdditiveBlending}));
+     pts.frustumCulled=false;pts.userData.info=info;warp.add(pts);warp.userData.layers.push(pts);});
+   scene.add(warp);}
 
   galaxy=new THREE.Group();galaxy.visible=false;scene.add(galaxy);
 
@@ -463,7 +581,7 @@ function build(){
    const l=new THREE.Line(g,new THREE.LineBasicMaterial({color:0xfff0fa,transparent:true,opacity:0,blending:THREE.AdditiveBlending,depthWrite:false}));l.frustumCulled=false;l.userData={life:0};scene.add(l);shooters.push(l);}
 
   // interactive icons
-  [['💌','จดหมาย','letter'],['🃏','การ์ดทำนาย','cards'],['🧩','ต่อรูป','puzzle'],['⏳','นับถอยหลัง','count']].forEach(([e,l,t],i)=>{const s=iconSprite(e,l);const a=i/4*6.283+.8,r=6.6;s.position.set(Math.cos(a)*r,1.1,Math.sin(a)*r);s.userData={type:t,bob:i*1.3,icon:true};orbitGroup.add(s);clickables.push(s);});
+  [['💌','จดหมาย','letter'],['🃏','การ์ดทำนาย','cards'],['🧩','ต่อรูป','puzzle'],['⏳','นับถอยหลัง','count'],['🏮','ขอพร','wish'],['🎮','เกม','game']].forEach(([e,l,t],i)=>{const s=iconSprite(e,l);const a=i/6*6.283+.8,r=6.6;s.position.set(Math.cos(a)*r,1.1,Math.sin(a)*r);s.userData={type:t,bob:i*1.3,icon:true};orbitGroup.add(s);clickables.push(s);});
 
   // floating hearts
   for(let i=0;i<10;i++){const s=heartSprite();const a=Math.random()*6.283,r=3+Math.random()*7;const sz=.45+Math.random()*.5;s.scale.set(sz,sz,1);s.position.set(Math.cos(a)*r,.6+Math.random()*3,Math.sin(a)*r);s.userData={type:'heart',bob:Math.random()*6,base:s.position.y};galaxy.add(s);floaters.push(s);clickables.push(s);}
@@ -494,8 +612,12 @@ if(gl){
   gl.domElement.addEventListener('pointerdown',e=>{down={x:e.clientX,y:e.clientY};});
   gl.domElement.addEventListener('pointerup',e=>{if(state!=='galaxy'||modalOpen||!down)return;const moved=Math.hypot(e.clientX-down.x,e.clientY-down.y);down=null;if(moved>8)return;
     const o=pick(e.clientX,e.clientY);if(!o)return;const t=o.userData.type;
-    if(t==='boom'){heartPts.userData.boom=1;const msg=['หัวใจแตกเป็นดาว แต่ก็กลับมาหาเธอเสมอ','รักเธอเต็มจักรวาล','ทุกอนุภาคเป็นของเธอ'];toast(msg[Math.random()*msg.length|0]);chime(1318,.07);setTimeout(()=>chime(1568,.05),220);return;}
-    if(t==='heart'){const msg=['รักเธอนะ','คิดถึงเสมอ','ของฉันคนเดียว','หัวใจเป็นของเธอ','อยู่ด้วยกันนาน ๆ นะ'];toast(msg[Math.random()*msg.length|0]);chime(1175,.06);o.userData.pop=1;return;}
+    if(t==='boom'){heartPts.userData.boom=1;burst(e.clientX,e.clientY,60,{spread:1.3});const msg=['รักเธอนะ','คิดถึงเธอ','หัวใจเค้าเป็นของเธอ'];toast(msg[Math.random()*msg.length|0]);chime(1318,.07);setTimeout(()=>chime(1568,.05),220);return;}
+    if(t==='heart'){const msg=['รักเธอนะ','คิดถึงนะ','ของเค้าคนเดียว','เธอน่ารักมาก','อยู่ด้วยกันนาน ๆ นะ'];chime(1175,.06);o.userData.pop=1;burst(e.clientX,e.clientY,22,{spread:.8});
+      if(!o.userData.found){o.userData.found=true;o.material.color.set(0xffd27a);found++;updCount();
+        if(found===floaters.length){toast('ครบแล้ว! ♡');setTimeout(()=>openModal('secret'),1000);return;}
+        toast(`${msg[Math.random()*msg.length|0]} (${found}/${floaters.length})`,true);}
+      else toast(msg[Math.random()*msg.length|0]);return;}
     if(t==='photo')openModal('photo',o.userData.i);else openModal(t);});
   let mvT=0;gl.domElement.addEventListener('pointermove',e=>{if(state!=='galaxy'||e.pointerType!=='mouse')return;const n=performance.now();if(n-mvT<80)return;mvT=n;const o=pick(e.clientX,e.clientY);gl.domElement.style.cursor=o?'pointer':'grab';});
 }
@@ -506,9 +628,11 @@ function loop(){
   requestAnimationFrame(loop);if(document.hidden)return;
   const dt=Math.min(.05,clock.getDelta()),T=clock.elapsedTime;
   stars.rotation.y+=dt*.004;
-  if(warp.visible){const {info,speed}=warp.userData,pos=warp.geometry.attributes.position.array,len=Math.min(14,speed*.06+.05);
-    for(let i=0;i<info.length;i++){const s=info[i];s.z+=speed*dt;if(s.z>6){s.z=-220;}pos.set([s.x,s.y,s.z,s.x,s.y,s.z-len],i*6);}
-    warp.geometry.attributes.position.needsUpdate=true;warp.rotation.z+=dt*(state==='warp'?.6:.05);}
+  if(warp.visible){const sp=warp.userData.speed;
+    warp.userData.layers.forEach(L=>{const info=L.userData.info,pos=L.geometry.attributes.position.array;
+      for(let i=0;i<info.length;i++){const q=info[i];q.z+=sp*dt;if(q.z>6)q.z=-160;const wob=Math.sin(T*1.5+q.w)*.25;pos[i*3]=q.x+wob;pos[i*3+1]=q.y+Math.cos(T*1.3+q.w)*.25;pos[i*3+2]=q.z;}
+      L.geometry.attributes.position.needsUpdate=true;});
+    warp.rotation.z+=dt*(state==='warp'?.8:.08);}
   if(galaxy.visible){
     galaxy.getObjectByName('disk').rotation.y+=dt*.06;orbitGroup.rotation.y-=dt*.035;
     const pulse=1+Math.sin(T*2.4)*.04+Math.max(0,Math.sin(T*2.4*2))*.02;heartPts.scale.setScalar(pulse);heartPts.rotation.y=Math.sin(T*.5)*.55;
@@ -538,8 +662,9 @@ const hold=$('hold'),fill=$('fill');
 function setCharge(v){charge=Math.max(0,Math.min(1,v));fill.setAttribute('y',String(92-92*charge));$('pct').textContent=`CHARGING LOVE ${Math.round(charge*100)}%`;}
 function gateTick(now){const dt=(now-lastT)/1000;lastT=now;if(state!=='gate')return;
   if(holding)setCharge(charge+dt/(reduce?.6:1.8));else if(charge>0&&charge<1)setCharge(charge-dt*.8);
-  if(gl&&warp)warp.userData.speed=14+charge*40;
+  if(gl&&warp)warp.userData.speed=10+charge*30;
   if(holding&&Math.random()<.12)chime(523+charge*700,.025);
+  if(holding&&Math.random()<.25+charge*.5){const [hx,hy]=ctr(hold);floatHeart(hx,hy-20);}
   if(charge>=1){launch();return;}requestAnimationFrame(gateTick);}
 requestAnimationFrame(gateTick);
 const start=e=>{e.preventDefault();try{hold.setPointerCapture(e.pointerId);}catch(_){}holding=true;hold.classList.add('charging');ctx();if(ac)ac.resume();};
@@ -550,11 +675,11 @@ hold.addEventListener('keyup',stop);
 hold.addEventListener('contextmenu',e=>e.preventDefault());
 
 function launch(){
-  state='warp';stop();setMusic(true);chime(1318,.08);$('gate').classList.add('gone');
+  state='warp';stop();setMusic(true);chime(1318,.08);{const [hx,hy]=ctr(hold);burst(hx,hy,90,{spread:1.6});}$('gate').classList.add('gone');
   if(!gl){showUI();return;}
   if(reduce){enterGalaxy();return;}
   const t0=performance.now();
-  const accel=now=>{const k=(now-t0)/2600;warp.userData.speed=54+Math.pow(Math.min(1,k),2)*420;camera.fov=58+Math.min(1,k)*30;camera.updateProjectionMatrix();
+  const accel=now=>{const k=(now-t0)/2600;warp.userData.speed=40+Math.pow(Math.min(1,k),2)*130;camera.fov=58+Math.min(1,k)*30;camera.updateProjectionMatrix();
     if(k<1)requestAnimationFrame(accel);else{$('flash').classList.add('on');setTimeout(()=>{camera.fov=58;camera.updateProjectionMatrix();enterGalaxy();$('flash').classList.remove('on');},260);}};
   requestAnimationFrame(accel);
 }
