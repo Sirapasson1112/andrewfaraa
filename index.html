@@ -16,6 +16,10 @@
 }
 *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
 [hidden]{display:none!important}
+html{-webkit-text-size-adjust:100%}
+body{-webkit-user-select:none;user-select:none;-webkit-touch-callout:none;overscroll-behavior:none}
+.letter,.reading{-webkit-user-select:text;user-select:text}
+button{touch-action:manipulation}
 html,body{height:100%;margin:0;overflow:hidden;background:var(--void);color:var(--ink);font-family:var(--f-body)}
 button{font:inherit;color:inherit;cursor:pointer}
 :focus-visible{outline:2px solid var(--pink-2);outline-offset:3px}
@@ -86,7 +90,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* modal */
 #modal{position:fixed;inset:0;z-index:20;display:grid;place-items:center;padding:16px;background:rgba(5,2,10,.55);backdrop-filter:blur(4px)}
-.m-card{position:relative;width:min(94vw,560px);max-height:calc(100dvh - 32px);overflow:auto;border-radius:24px;padding:26px 20px 20px;text-align:center;background:var(--glass);border:1px solid var(--line);box-shadow:0 0 50px rgba(255,60,180,.35),inset 0 1px 0 rgba(255,255,255,.12);animation:mIn .55s cubic-bezier(.2,.9,.25,1.1)}
+.m-card{position:relative;width:min(94vw,560px);max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow:auto;border-radius:24px;padding:26px 20px 20px;text-align:center;background:var(--glass);border:1px solid var(--line);box-shadow:0 0 50px rgba(255,60,180,.35),inset 0 1px 0 rgba(255,255,255,.12);animation:mIn .55s cubic-bezier(.2,.9,.25,1.1)}
 @keyframes mIn{from{opacity:0;transform:scale(.85) translateY(20px)}}
 .m-card h2{margin:0 0 4px;font-family:var(--f-display);font-size:clamp(1.5rem,5vw,2rem);color:#fff;text-shadow:0 0 16px rgba(255,95,174,.8)}
 .m-card .k{margin:0 0 16px;color:var(--dim);font-size:.9rem}
@@ -147,7 +151,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 
 /* photo */
 .ph-frame{background:#fff;padding:10px 10px 0;border-radius:6px;display:inline-flex;flex-direction:column;box-shadow:0 0 40px rgba(255,95,174,.45);max-width:100%;animation:mIn .5s}
-.ph-frame img{max-width:100%;max-height:calc(100dvh - 250px);object-fit:contain;display:block;border-radius:3px}
+.ph-frame img{max-width:100%;max-height:calc(100vh - 250px);max-height:calc(100dvh - 250px);object-fit:contain;display:block;border-radius:3px}
 .ph-frame figcaption{font-family:var(--f-display);color:#7a2550;font-size:1.15rem;padding:8px 0 10px}
 .ph-nav{display:flex;justify-content:center;align-items:center;gap:12px;margin-top:12px}
 .ph-nav button{background:rgba(255,255,255,.08);border:1px solid var(--line);border-radius:999px;width:40px;height:40px;font-size:1.2rem}
@@ -156,6 +160,8 @@ button{font:inherit;color:inherit;cursor:pointer}
 .toast{position:fixed;left:50%;top:42%;transform:translate(-50%,-50%) scale(.6);z-index:15;font-family:var(--f-display);font-size:clamp(1.8rem,8vw,3rem);color:#fff;text-shadow:0 0 20px var(--pink),0 0 40px var(--pink);pointer-events:none;opacity:0;transition:opacity .4s,transform .6s cubic-bezier(.2,.9,.25,1.3)}
 .toast.on{opacity:1;transform:translate(-50%,-50%) scale(1)}
 .nogl{position:fixed;inset:0;display:grid;place-items:center;padding:24px;text-align:center;color:var(--dim)}
+@media (max-height:640px){.pad{grid-template-columns:repeat(3,60px);gap:10px 20px}.pad button{width:60px;height:60px;font-size:1.35rem}.l-ico{width:50px;height:50px;font-size:1.3rem}}
+@media (max-width:360px){.dock button{min-width:44px;font-size:.62rem;padding:6px 4px}.dock{gap:2px}}
 @media (max-width:420px){.dock button{min-width:48px;padding:6px 6px}.hint{display:none}}
 @media (prefers-reduced-motion:reduce){*{animation:none!important;transition:none!important}}
 </style>
@@ -392,7 +398,7 @@ function photoSprite(i){const c=document.createElement('canvas');c.width=256;c.h
     g.fillStyle='#ff5fae';heartShape(g,128,262,22);g.fill();t.needsUpdate=true;};im.src=PHOTOS[i].src;return s;}
 
 function build(){
-  const W=innerWidth,H=innerHeight;gl.setPixelRatio(Math.min(devicePixelRatio||1,2));gl.setSize(W,H,false);gl.setClearColor(0x07030d,1);
+  const W=innerWidth,H=innerHeight;gl.setPixelRatio(Math.min(devicePixelRatio||1,innerWidth<700?1.5:2));gl.setSize(W,H,false);gl.setClearColor(0x07030d,1);
   camera=new THREE.PerspectiveCamera(58,W/H,.1,500);camera.position.set(0,0,6);
   const dot=dotTex();
 
@@ -468,7 +474,7 @@ function build(){
 }
 function camDist(){return innerWidth/innerHeight<1?25:17;}
 function resize(){if(!gl)return;const W=innerWidth,H=innerHeight;gl.setSize(W,H,false);camera.aspect=W/H;camera.updateProjectionMatrix();}
-addEventListener('resize',resize);
+addEventListener('resize',resize);addEventListener('orientationchange',()=>setTimeout(resize,250));
 
 /* fly-in from warp to galaxy */
 let fly=null;
@@ -536,7 +542,7 @@ function gateTick(now){const dt=(now-lastT)/1000;lastT=now;if(state!=='gate')ret
   if(holding&&Math.random()<.12)chime(523+charge*700,.025);
   if(charge>=1){launch();return;}requestAnimationFrame(gateTick);}
 requestAnimationFrame(gateTick);
-const start=e=>{e.preventDefault();holding=true;hold.classList.add('charging');ctx();if(ac)ac.resume();};
+const start=e=>{e.preventDefault();try{hold.setPointerCapture(e.pointerId);}catch(_){}holding=true;hold.classList.add('charging');ctx();if(ac)ac.resume();};
 const stop=()=>{holding=false;hold.classList.remove('charging');};
 hold.addEventListener('pointerdown',start);['pointerup','pointerleave','pointercancel'].forEach(ev=>hold.addEventListener(ev,stop));
 hold.addEventListener('keydown',e=>{if((e.key==='Enter'||e.key===' ')&&!e.repeat){holding=true;hold.classList.add('charging');ctx();}});
