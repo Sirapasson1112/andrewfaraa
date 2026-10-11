@@ -220,8 +220,7 @@ button{font:inherit;color:inherit;cursor:pointer}
 <div id="lock">
   <div class="l-card">
     <div class="l-ico" aria-hidden="true">🔒</div>
-    <h1 class="l-t">ใส่รหัสวันครบรอบ</h1>
-    <p class="l-s">วันที่เราเริ่มคบกัน (วว ดด ปป)</p>
+    <h1 class="l-t">ใส่รหัส</h1>
     <div class="dots" id="dots" aria-live="polite"><i></i><i></i><i></i><i></i><i></i><i></i></div>
     <p class="l-msg" id="lMsg"></p>
     <div class="pad" id="pad">
@@ -345,7 +344,7 @@ function check(){
   if(CONFIG.passcodes.includes(code)){$('dots').classList.add('ok');$('lMsg').textContent='ถูกแล้ว ♡ เข้ามาเลย';chime(1046,.07);setTimeout(()=>chime(1318,.07),150);
     setTimeout(()=>{$('lock').classList.add('gone');$('gate').classList.add('ready');},900);return;}
   tries++;const dz=$('dots');dz.classList.remove('bad');void dz.offsetWidth;dz.classList.add('bad');chime(220,.06);
-  $('lMsg').textContent=tries>=4?'คำใบ้: วันที่ 11 ของเดือนสุดท้ายของปี 2565':tries>=2?'คำใบ้: วันแรกที่เราเป็นแฟนกัน เช่น 010166':'ยังไม่ถูกน้า ลองใหม่อีกที';
+  $('lMsg').textContent='ยังไม่ถูกน้า ลองใหม่อีกที';
   setTimeout(()=>{code='';drawDots();},450);
 }
 $('pad').addEventListener('click',e=>{const b=e.target.closest('button');if(b)press(b.dataset.k||b.textContent.trim());});
